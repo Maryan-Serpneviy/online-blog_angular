@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute, Params } from '@angular/router'
 
 import { User } from 'src/app/shared/interfaces'
 import { AuthService } from 'src/app/shared/services/auth.service'
@@ -14,13 +14,21 @@ export class LoginPageComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   form: FormGroup
   submitted = false
+  message: string
 
   ngOnInit() {
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params.loginAgain) {
+        this.message = 'Log in admin panel'
+      }
+    })
+
     this.form = new FormGroup({
       email: new FormControl(null, [
         Validators.email,
