@@ -25,7 +25,9 @@ export class LoginPageComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params: Params) => {
       if (params.loginAgain) {
-        this.message = 'Log in admin panel'
+        this.message = 'Session expired. Please relogin'
+      } else if (params.authFailed) {
+        this.message = 'Session expired. Please relogin'
       }
     })
 

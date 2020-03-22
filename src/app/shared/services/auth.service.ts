@@ -10,7 +10,7 @@ const SIGN_IN_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWi
 const TOKEN_KEY = 'ab-token'
 const EXPIRES_KEY = 'ab-token-expires'
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
    constructor(private http: HttpClient) {}
 
