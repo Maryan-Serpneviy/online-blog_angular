@@ -18,6 +18,7 @@ export class LoginPageComponent implements OnInit {
   ) {}
 
   form: FormGroup
+  submitted = false
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -37,12 +38,15 @@ export class LoginPageComponent implements OnInit {
       return
     }
 
+    this.submitted = true
+
     const user: User = {
       email: this.form.value.email,
       password: this.form.value.password
     }
 
     this.auth.login(user).subscribe(() => {
+      this.submitted = false
       this.form.reset()
       this.router.navigate(['/admin', 'dashboard'])
     })
