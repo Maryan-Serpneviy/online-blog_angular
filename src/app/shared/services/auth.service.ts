@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
-import { Observable } from 'rxjs'
-import { tap } from 'rxjs/operators'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
+import { Observable, throwError, Subject } from 'rxjs'
+import { tap, catchError } from 'rxjs/operators'
 
 import { User, IFirebaseAuth } from '../interfaces'
 import { environment } from 'src/environments/environment'
@@ -13,6 +13,8 @@ const EXPIRES_KEY = 'ab-token-expires'
 @Injectable()
 export class AuthService {
    constructor(private http: HttpClient) {}
+
+   public error$: Subject<string> = new Subject<string>()
 
    get token(): string {
       const expDate = new Date(localStorage.getItem(EXPIRES_KEY))
@@ -28,7 +30,8 @@ export class AuthService {
       user.returnSecureToken = true
       return this.http.post(`${SIGN_IN_URL}${environment.apiKey}`, user)
          .pipe(
-            tap(this.setToken)
+            tap(this.setToken),
+            catchError(this.handleError.bind(this))
          )
    }
 
@@ -49,5 +52,23 @@ export class AuthService {
          localStorage.removeItem(TOKEN_KEY)
          localStorage.removeItem(EXPIRES_KEY)
       }
+   }
+
+   private handleError(error: HttpErrorResponse) {
+      const { message } = error.error.error
+
+      switch (message) {
+         case 'EMAIL_NOT_FOUND':
+            this.error$.next('Email not found')
+            break
+         case 'INVALID_EMAIL':
+            this.error$.next('Invalid email')
+            break
+         case 'INVALID_PASSWORD':
+            this.error$.next('Invalid password')
+            break
+      }
+
+      return throwError(error)
    }
 }

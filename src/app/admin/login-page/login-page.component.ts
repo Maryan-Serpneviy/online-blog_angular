@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/shared/services/auth.service'
 export class LoginPageComponent implements OnInit {
 
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     private router: Router
   ) {}
 
@@ -49,6 +49,8 @@ export class LoginPageComponent implements OnInit {
       this.submitted = false
       this.form.reset()
       this.router.navigate(['/admin', 'dashboard'])
+    }, () => { // handle error
+      this.submitted = false
     })
   }
 }
