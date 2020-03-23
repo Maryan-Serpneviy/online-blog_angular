@@ -11,7 +11,9 @@ import { HomePageComponent } from './home-page/home-page.component'
 import { PostPageComponent } from './post-page/post-page.component';
 import { PostComponent } from './shared/components/post/post.component'
 import { SharedModule } from './shared/shared.module'
-import { AuthInterceptor } from './shared/services/auth.interceptor'
+import { AuthInterceptor } from './shared/services/auth.interceptor';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment'
 
 registerLocaleData(ualoc, 'ua')
 
@@ -32,7 +34,8 @@ const interceptorProvider: Provider = {
   imports: [
     SharedModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [ interceptorProvider ],
   bootstrap: [ AppComponent ]
